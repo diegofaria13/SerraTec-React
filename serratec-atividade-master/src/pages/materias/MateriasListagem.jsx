@@ -12,9 +12,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { API_MATERIAS } from "../../constants";
 
 const MateriasListagem = () => {
+	//INICIA O MYSWAL COM O WithReactContent Por questões da API
+	const MySwal = withReactContent(Swal);
 	const [materias, setMaterias] = useState([]);
 
 	useEffect(() => {
@@ -31,7 +34,7 @@ const MateriasListagem = () => {
 		axios
 			.delete(API_MATERIAS, { data: materia })
 			.then((response) => {
-				Swal.fire({
+				MySwal.fire({
 					icon: "success",
 					title: "Removido com sucesso!",
 					text: response?.data?.message,
@@ -40,7 +43,7 @@ const MateriasListagem = () => {
 				getMaterias();
 			})
 			.catch((error) => {
-				Swal.fire({
+				MySwal.fire({
 					icon: "error",
 					title: "Oops...",
 					text: error,
