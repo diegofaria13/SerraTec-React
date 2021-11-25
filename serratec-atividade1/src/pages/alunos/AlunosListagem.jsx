@@ -15,6 +15,8 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const AlunosListagem = () => {
 	const navigate = useNavigate();
@@ -28,7 +30,9 @@ const AlunosListagem = () => {
 
 	const getAlunos = () => {
 		axios.get(API_URL).then((response) => {
-			setAlunos(response.data);
+			setTimeout(() => {
+				setAlunos(response.data);
+			}, 5000);
 		});
 	};
 
@@ -58,7 +62,7 @@ const AlunosListagem = () => {
 		navigate(`/editar-alunos/${aluno.id}`);
 	};
 
-	return (
+	return alunos.length > 0 ? (
 		<Box sx={{ marginTop: "25px" }}>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -98,6 +102,16 @@ const AlunosListagem = () => {
 				</Table>
 			</TableContainer>
 		</Box>
+	) : (
+		<>
+			<Stack
+				sx={{ color: "blue", margin: "150px 25vw" }}
+				spacing={2}
+				direction="row"
+			>
+				<CircularProgress color="inherit" />
+			</Stack>
+		</>
 	);
 };
 
