@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { API_MATERIAS } from "../../constants";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const MateriasListagem = () => {
 	//INICIA O MYSWAL COM O WithReactContent Por questões da API
@@ -26,7 +27,9 @@ const MateriasListagem = () => {
 
 	const getMaterias = () => {
 		axios.get(API_MATERIAS).then((response) => {
-			setMaterias(response.data);
+			setTimeout(() => {
+				setMaterias(response.data);
+			}, 5000);
 		});
 	};
 
@@ -51,7 +54,7 @@ const MateriasListagem = () => {
 			});
 	};
 
-	return (
+	return materias.length > 0 ? (
 		<Box sx={{ marginTop: "25px", marginBottom: "15px" }}>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -94,6 +97,10 @@ const MateriasListagem = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+		</Box>
+	) : (
+		<Box sx={{ width: "100%" }}>
+			<LinearProgress color="secondary" />
 		</Box>
 	);
 };

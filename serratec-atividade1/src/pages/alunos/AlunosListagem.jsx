@@ -105,11 +105,11 @@ const AlunosListagem = () => {
 	) : (
 		<>
 			<Stack
-				sx={{ color: "blue", margin: "150px 25vw" }}
+				sx={{ color: "blue", margin: "30vh 30vw" }}
 				spacing={2}
 				direction="row"
 			>
-				<CircularProgress color="inherit" />
+				<CircularProgress color="secondary" />
 			</Stack>
 		</>
 	);
