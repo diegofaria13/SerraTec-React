@@ -7,7 +7,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { StyledTableCell, StyledTableRow } from "./styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../constants";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -17,22 +17,30 @@ import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
+import { AlunosContext } from "../../context/index";
 
 const AlunosListagem = () => {
 	const navigate = useNavigate();
 	const MySwal = withReactContent(Swal);
 
-	const [alunos, setAlunos] = useState([]);
+	// const [alunos, setAlunos] = useState([]);
+
+	const { alunos, setAlunos } = useContext(AlunosContext);
 
 	useEffect(() => {
-		getAlunos();
+		//Caso não tenha nenhuma att ou nenhum novo aluno ele n irá fazer requisição para a API
+		//Vai estar usando o context
+		if (alunos.length <= 0) {
+			getAlunos();
+		}
 	}, []);
 
 	const getAlunos = () => {
 		axios.get(API_URL).then((response) => {
 			setTimeout(() => {
+				//A lista de alunos vai ser setada diretamente no nosso context
 				setAlunos(response.data);
-			}, 5000);
+			}, 1000);
 		});
 	};
 
@@ -40,7 +48,11 @@ const AlunosListagem = () => {
 		axios
 			.delete(API_URL, { data: aluno })
 			.then((response) => {
-				MySwal.fire(<p>{response?.data?.message}</p>);
+				MySwal.fire({
+					icon: "success",
+					title: "Sucesso!",
+					text: response?.data?.message,
+				});
 
 				const alunoIndex = alunos.findIndex(
 					(elemento) => elemento.id === aluno.id

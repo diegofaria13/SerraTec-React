@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	ButtonCadastro,
 	Form,
@@ -9,6 +9,7 @@ import { API_URL } from "../../constants";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useParams } from "react-router";
+import { AlunosContext } from "../../context/index";
 
 const CadastrarAlunos = () => {
 	const MySwal = withReactContent(Swal);
@@ -23,22 +24,36 @@ const CadastrarAlunos = () => {
 	const [idade, setIdade] = useState(valorInicial);
 	const [cidade, setCidade] = useState(valorInicial);
 
+	const { alunos, setAlunos } = useContext(AlunosContext);
+
 	useEffect(() => {
 		getAlunos();
 	}, []);
 
 	//Get utilizado para quando entrar na tela de edição puxar os alunos
+	//Get Direto da API, a cada renderização faz um request
+	// const getAlunos = () => {
+	// 	axios.get(API_URL).then((response) => {
+	// 		response.data.forEach((aluno) => {
+	// 			// 			//Para não renderizar todos os alunos dando o set, botamos uma
+	// 			// 			//condição para renderizar somente aquele que venha com o id igual
+	// 			if (aluno.id == id) {
+	// 				setNome(aluno.nome);
+	// 				setIdade(aluno.idade);
+	// 				setCidade(aluno.cidade);
+	// 			}
+	// 		});
+	// 	});
+	// };
+
+	//Pegar os dados diretamente do nosso context e economizar requests
 	const getAlunos = () => {
-		axios.get(API_URL).then((response) => {
-			response.data.forEach((aluno) => {
-				//Para não renderizar todos os alunos dando o set, botamos uma
-				//condição para renderizar somente aquele que venha com o id igual
-				if (aluno.id == id) {
-					setNome(aluno.nome);
-					setIdade(aluno.idade);
-					setCidade(aluno.cidade);
-				}
-			});
+		alunos.forEach((Response) => {
+			if (alunos.id == id) {
+				setNome(alunos.nome);
+				setIdade(alunos.idade);
+				setCidade(alunos.cidade);
+			}
 		});
 	};
 

@@ -8,6 +8,7 @@ import AlunosListagem from "./pages/alunos/AlunosListagem";
 import CadastrarAlunos from "./pages/alunos/CadastrarAlunos";
 import CadastrarMateria from "./pages/materias/CadastrarMateria";
 import MateriasListagem from "./pages/materias/MateriasListagem";
+import { AlunosProvider } from "./context/index";
 
 const Routes = () => {
 	const routes = useRoutes([
@@ -23,12 +24,14 @@ const Routes = () => {
 
 ReactDOM.render(
 	<React.StrictMode>
-		<BrowserRouter>
-			<Navbar />
-			<Container maxWidth="md">
-				<Routes />
-			</Container>
-		</BrowserRouter>
+		<AlunosProvider>
+			<BrowserRouter>
+				<Navbar />
+				<Container maxWidth="md">
+					<Routes />
+				</Container>
+			</BrowserRouter>
+		</AlunosProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );

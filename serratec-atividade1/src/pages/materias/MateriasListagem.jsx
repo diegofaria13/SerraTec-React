@@ -29,7 +29,7 @@ const MateriasListagem = () => {
 		axios.get(API_MATERIAS).then((response) => {
 			setTimeout(() => {
 				setMaterias(response.data);
-			}, 5000);
+			}, 1000);
 		});
 	};
 
