@@ -17,7 +17,7 @@ import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
-import { AlunosContext } from "../../context/index";
+import { AlunosContext } from "../../context/alunos";
 
 const AlunosListagem = () => {
 	const navigate = useNavigate();

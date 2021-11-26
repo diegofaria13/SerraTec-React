@@ -1,20 +1,8 @@
-import { createContext, useState } from "react";
+import { AlunosProvider } from "./alunos"
 
-const AlunosContext = createContext();
+const GlobalContext = ({ children }) => {
 
-const AlunosProvider = ({ children }) => {
-	const [alunos, setAlunos] = useState([]);
+    return <AlunosProvider> {children} </AlunosProvider>
+}
 
-	return (
-		<AlunosContext.Provider
-			value={{
-				alunos,
-				setAlunos,
-			}}
-		>
-			{children}
-		</AlunosContext.Provider>
-	);
-};
-
-export { AlunosProvider, AlunosContext };
+export default GlobalContext;

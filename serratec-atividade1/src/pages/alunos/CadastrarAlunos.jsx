@@ -9,7 +9,7 @@ import { API_URL } from "../../constants";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useParams } from "react-router";
-import { AlunosContext } from "../../context/index";
+import { AlunosContext } from "../../context/alunos";
 
 const CadastrarAlunos = () => {
 	const MySwal = withReactContent(Swal);
@@ -48,11 +48,11 @@ const CadastrarAlunos = () => {
 
 	//Pegar os dados diretamente do nosso context e economizar requests
 	const getAlunos = () => {
-		alunos.forEach((Response) => {
-			if (alunos.id == id) {
-				setNome(alunos.nome);
-				setIdade(alunos.idade);
-				setCidade(alunos.cidade);
+		alunos.forEach((aluno) => {
+			if (aluno.id == id) {
+				setNome(aluno.nome);
+				setIdade(aluno.idade);
+				setCidade(aluno.cidade);
 			}
 		});
 	};
