@@ -13,6 +13,7 @@ import { useParams } from "react-router";
 import { MateriasContext } from "../../context/materias";
 import Lottie from "react-lottie"; // import do lotties
 import animationData from "../../lotties/78259-loading.json"; //imagem baixada do lotties
+import { Box } from "@mui/system";
 
 const CadastrarMateria = () => {
 	const MySwal = withReactContent(Swal);
