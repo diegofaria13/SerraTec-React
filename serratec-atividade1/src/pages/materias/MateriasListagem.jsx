@@ -8,22 +8,38 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { StyledTableCell, StyledTableRow } from "./styles";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { API_MATERIAS } from "../../constants";
 import LinearProgress from "@mui/material/LinearProgress";
+import { MateriasContext } from "../../context/materias";
+import { useNavigate } from "react-router-dom";
 
 const MateriasListagem = () => {
 	//INICIA O MYSWAL COM O WithReactContent Por questões da API
 	const MySwal = withReactContent(Swal);
-	const [materias, setMaterias] = useState([]);
+	const navigate = useNavigate();
+
+	// const [materias, setMaterias] = useState([]);
+	const { materias, setMaterias } = useContext(MateriasContext);
 
 	useEffect(() => {
-		getMaterias();
+		if (materias.length <= 0) {
+			getMaterias();
+		}
 	}, []);
+
+	// const getMaterias = () => {
+	// 	axios.get(API_MATERIAS).then((response) => {
+	// 		setTimeout(() => {
+	// 			setMaterias(response.data);
+	// 		}, 1000);
+	// 	});
+	// };
 
 	const getMaterias = () => {
 		axios.get(API_MATERIAS).then((response) => {
@@ -52,6 +68,10 @@ const MateriasListagem = () => {
 					text: error,
 				});
 			});
+	};
+
+	const editarMateria = (materia) => {
+		navigate(`/editar-materias/${materia.id}`);
 	};
 
 	return materias.length > 0 ? (
@@ -85,6 +105,12 @@ const MateriasListagem = () => {
 									{materia.professor_nome}
 								</StyledTableCell>
 								<StyledTableCell align="center">
+									<Button
+										onClick={() => editarMateria(materia)}
+										variant="text"
+									>
+										<ModeEditIcon />
+									</Button>
 									<Button
 										onClick={() => deletarMateria(materia)}
 										variant="text"

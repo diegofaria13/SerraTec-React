@@ -8,40 +8,105 @@ import {
 } from "../../components/Cadastros";
 import { API_MATERIAS } from "../../constants";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router";
+import { MateriasContext } from "../../context/materias";
 
 const CadastrarMateria = () => {
 	const MySwal = withReactContent(Swal);
 
-	const [titulo, setTitulo] = useState();
-	const [professor_nome, setProfessor_nome] = useState();
+	const { id } = useParams();
 
-	const cadastrar = () => {
-		axios
-			.post(API_MATERIAS, {
-				titulo,
-				professor_nome,
-			})
-			.then((response) => {
-				if (response.status == 201) {
-					//IRÁ PEGAR A MESSAGEM DE SUCESSO QUE VEM DIRETO DA API;
-					MySwal.fire({
-						icon: "success",
-						title: "Sucesso!",
-						text: response?.data?.message,
-					});
-					//APÓS A MENSAGEM DE SUCESSO IRÁ ATIVAR A FUNÇÃO
-					//LIMPAR CAMPOS QUE DA UM SET NULL PARA OS IMPUT
-					limparCampos();
+	const valorInicial = id ? " " : null;
+
+	const [titulo, setTitulo] = useState(valorInicial);
+	const [professor_nome, setProfessor_nome] = useState(valorInicial);
+
+	const { materias, setMaterias } = useContext(MateriasContext);
+
+	useEffect(() => {
+		getMaterias();
+	}, []);
+
+	const getMaterias = () => {
+		if (materias.length > 0) {
+			materias.forEach((materia) => {
+				//para cada aluno solicitado
+				if (materia.id == id) {
+					//confere se os ids sao iguais e coloca os dados do aluno solicitado
+					setTitulo(materia.titulo);
+					setProfessor_nome(materia.professor_nome);
 				}
-			})
-			.catch((error) => {
-				MySwal.fire({
-					icon: "error",
-					title: "Vish",
-					text: error,
+			});
+		} else {
+			axios.get(API_MATERIAS).then((response) => {
+				setMaterias(response.data);
+				response.data.forEach((materia) => {
+					//para cada materia solicitado
+					if (materia.id === parseInt(id)) {
+						//confere se os ids sao iguais e coloca os dados do materia solicitado
+						setTitulo(materia.titulo);
+						setProfessor_nome(materia.professor_nome);
+					}
 				});
 			});
+		}
+	};
+
+	const cadastrar = () => {
+		//Se caso o aluno já conter ID irá fazer o put **Atualizar**
+		if (id) {
+			axios
+				.put(API_MATERIAS, {
+					id,
+					titulo,
+					professor_nome,
+				})
+				.then((response) => {
+					if (response.status === 200) {
+						axios.get(API_MATERIAS).then((response) => {
+							setMaterias(response.data);
+						});
+						MySwal.fire({
+							icon: "success",
+							text: response?.data?.message,
+						});
+						limparCampos();
+					}
+				})
+				.catch((error) => {
+					MySwal.fire({
+						icon: "error",
+						title: "Oops...",
+						text: error,
+					});
+				});
+		} else {
+			axios
+				.post(API_MATERIAS, {
+					titulo,
+					professor_nome,
+				})
+				.then((response) => {
+					if (response.status === 201) {
+						axios.get(API_MATERIAS).then((response) => {
+							setMaterias(response.data);
+						});
+						MySwal.fire({
+							icon: "success",
+							text: response?.data?.message,
+						});
+						limparCampos();
+					}
+				})
+				.catch((error) => {
+					MySwal.fire({
+						icon: "error",
+						title: "Oops...",
+						text: error,
+					});
+				});
+		}
 	};
 
 	//FUNCAO PARA
@@ -71,7 +136,7 @@ const CadastrarMateria = () => {
 				onChange={(e) => setProfessor_nome(e.target.value)}
 			/>
 			<ButtonCadastro variant="contained" onClick={cadastrar}>
-				Cadastrar
+				{id ? "Editar" : "Cadastrar"}
 			</ButtonCadastro>
 		</Form>
 	);
